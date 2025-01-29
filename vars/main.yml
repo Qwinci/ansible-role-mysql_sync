@@ -1,2 +1,15 @@
 ---
 # vars file for ajsalminen.mysql_sync
+mysql_sync_default_compress_commands:
+  none:
+    compress_cmd: 'cat'
+    decompress_cmd: 'cat'
+  xz:
+    compress_cmd: 'xz -c'
+    decompress_cmd: 'xz -dc'
+  gzip:
+    compress_cmd: 'gzip -c'
+    decompress_cmd: 'gzip -dc'
+  zstd:
+    compress_cmd: 'zstd -c'
+    decompress_cmd: 'zstd -dc'

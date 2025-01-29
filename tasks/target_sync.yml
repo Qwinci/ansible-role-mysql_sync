@@ -1,7 +1,14 @@
 ---
 
 - name: Copy files from source to target.
-  shell: "rsync {{ '--remove-source-files' if mysql_sync_delete_dump is defined else '' }} --delay-updates --compress --archive --out-format='{{changed_marker}}%i %n%L' {{hostvars[item.source].ansible_ssh_user|default(ansible_ssh_user)}}@{{item.source}}:{{ mysql_sync_source_dump_dir }}/{{ item.database }}.sql {{ mysql_sync_dump_dir }}/{{ item.database }}.sql"
+  shell: "rsync {{ '--remove-source-files' if mysql_sync_delete_dump is defined else '' }} --delay-updates --compress --archive --out-format='{{changed_marker}}%i %n%L' {{hostvars[item.source].ansible_ssh_user|default(ansible_ssh_user)}}@{{item.source}}:{{ mysql_sync_source_dump_dir }}/{{ item.database }}.sql.compressed {{ mysql_sync_dump_dir }}/{{ item.database }}.sql.compressed"
+  check_mode: no
+  with_items: "{{ mysql_sync_config }}"
+
+- name: Extract dump on target.
+  shell: >
+    {{ mysql_sync_decompress_cmd | default(mysql_sync_default_compress_commands[mysql_sync_compress_method]['decompress_cmd']) }} {{ mysql_sync_decompress_args | default('') }}
+    {{ mysql_sync_dump_dir }}/{{ item.database }}.sql.compressed > {{ mysql_sync_dump_dir }}/{{ item.database }}.sql
   check_mode: no
   with_items: "{{ mysql_sync_config }}"
 
