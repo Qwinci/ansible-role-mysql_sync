@@ -3,4 +3,5 @@
 mysql_sync_dump_dir: /tmp
 mysql_sync_source_dump_dir: /tmp
 mysql_sync_remote_user: root
+mysql_sync_compress_method: gzip
 changed_marker: '<<CHANGED>>'
